@@ -18,7 +18,7 @@ contractId=$(echo "$output" | tail -n 1)
 echo "ContractID: $contractId"
 
 stellar contract invoke \
-  --id $contractId \
+  --id CDNY3NFIYTMXLK3XK3WNQZVBR2VMPRIOQREBCW6JIANPLCEUCRUPIVJE \
   --source alice \
   --network testnet \
   -- \

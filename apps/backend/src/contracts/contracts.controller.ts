@@ -10,8 +10,8 @@ export class ContractsController {
 
     @Get(':id')
     async findOne(@Param('id') id: string): Promise<any[]> {
-        this.logger.log("incoming")
         const events = await this.contractsService.getEvents(id)
+        
         this.logger.log(events)
         events.forEach(event => {
             this.contractsService.saveToFile(id,event)

@@ -69,14 +69,21 @@ while (true) {
 const contractId = 'CDNY3NFIYTMXLK3XK3WNQZVBR2VMPRIOQREBCW6JIANPLCEUCRUPIVJE';
 const startLedger = 410441;
 
-getSorobanEvents(contractId, startLedger)
-  .then(events => {
-    console.log("Soroban events:", events);
-  })
-  .catch(error => {
-    console.error("Error:", error);
-  });
+// getSorobanEvents(contractId, startLedger)
+//   .then(events => {
+//     console.log("Soroban events:", events);
+//   })
+//   .catch(error => {
+//     console.error("Error:", error);
+//   });
 
+
+  const testFolder = '/Users/u/easystellarlogs';
+const fs = require('fs');
+
+fs.readdirSync(testFolder).forEach(file => {
+  console.log(file);
+});
 
 
 

@@ -1,15 +1,30 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { SorobanRpc } from '@stellar/stellar-sdk';
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'fs';
+import { existsSync, mkdirSync, readdirSync, readFileSync, writeFileSync } from 'fs';
 import { globSync } from "glob"
 import { resolve } from 'path';
 import { homedir } from 'os';
+import { Cron } from '@nestjs/schedule';
 
 
 @Injectable()
 export class ContractsService {
     private readonly logger = new Logger(ContractsService.name);
     private rpcServer = new SorobanRpc.Server("https://soroban-testnet.stellar.org:443");
+
+
+    @Cron('45 * * * * *')
+    async watchContracts() {
+      this.logger.debug('Called when the current second is 45');
+      const contractIdDirectory = resolve(homedir(), 'easystellarlogs');
+      const contractIdDirectories = readdirSync(contractIdDirectory)
+      for await (const contractId of contractIdDirectories) {
+        const events = await this.getEvents(contractId)
+        events.forEach(event => {
+            this.saveToFile(contractId,event)
+        })
+      }
+    }
 
 
     async getEvents(contractId: string): Promise<any[]> {

@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge"
 import { Loader2, AlertCircle } from "lucide-react"
 import { ResponsiveContainer, PieChart, Pie, Cell, BarChart, Bar, XAxis, YAxis } from 'recharts'
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart"
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
 
 type EventType = 'Transfer' | 'Approval' | 'Mint' | 'Burn'
 
@@ -55,6 +56,7 @@ export default function Dashboard() {
   const [events, setEvents] = useState<Event[]>([])
   const [loading, setLoading] = useState<boolean>(false)
   const [error, setError] = useState<string>('')
+  const [selectedEvent, setSelectedEvent] = useState<Event | null>(null)
 
   const fetchEvents = async () => {
     setLoading(true)
@@ -62,15 +64,17 @@ export default function Dashboard() {
     setEvents([])
 
     try {
-      if (!/^0x[a-fA-F0-9]{40}$/.test(contractAddress)) {
-        throw new Error('Invalid contract address')
-      }
+      // if (!/^0x[a-fA-F0-9]{40}$/.test(contractAddress)) {
+      //   throw new Error('Invalid contract address')
+      // }
 
+      const events = await fetch(`http://localhost:4000/contracts/${contractAddress}`)
+        .then(f => f.json())
       // Simulate API call delay
       await new Promise(resolve => setTimeout(resolve, 1000))
 
-      const testEvents = generateTestData(100)
-      setEvents(testEvents)
+      // const testEvents = generateTestData(100)
+      setEvents(events)
     } catch (err) {
       setError(err instanceof Error ? err.message : 'An unknown error occurred')
     } finally {
@@ -184,16 +188,18 @@ export default function Dashboard() {
               <Table>
                 <TableHeader>
                   <TableRow>
+                    <TableHead>Date</TableHead>
                     <TableHead>Event Type</TableHead>
-                    <TableHead>From/Owner</TableHead>
-                    <TableHead>To/Spender</TableHead>
-                    <TableHead>Value</TableHead>
-                    <TableHead>Timestamp</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {events.slice(0, 10).map((event, index) => (
-                    <TableRow key={index}>
+                  {events.map((event, index) => (
+                    <TableRow 
+                      key={index} 
+                      className="cursor-pointer hover:bg-muted/50"
+                      onClick={() => setSelectedEvent(event)}
+                    >
+                      <TableCell>{event.timestamp}</TableCell>
                       <TableCell>
                         <Badge variant={
                           event.type === "Transfer" ? "default" :
@@ -203,14 +209,6 @@ export default function Dashboard() {
                           {event.type}
                         </Badge>
                       </TableCell>
-                      <TableCell className="font-mono text-xs">
-                        {event.from}
-                      </TableCell>
-                      <TableCell className="font-mono text-xs">
-                        {event.to}
-                      </TableCell>
-                      <TableCell>{event.value} ETH</TableCell>
-                      <TableCell>{event.timestamp}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -219,6 +217,20 @@ export default function Dashboard() {
           </Card>
         </>
       )}
+
+      <Dialog open={!!selectedEvent} onOpenChange={() => setSelectedEvent(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>Event Details</DialogTitle>
+            <DialogDescription>
+              Raw JSON content of the selected event
+            </DialogDescription>
+          </DialogHeader>
+          <pre className="bg-muted p-4 rounded-md overflow-auto max-h-[400px]">
+            {JSON.stringify(selectedEvent, null, 2)}
+          </pre>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

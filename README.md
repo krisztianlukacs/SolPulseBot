@@ -1,4 +1,4 @@
-`./build_and_deploy.sh && npm run dev`
+`./build_sc_and_deploy.sh && npm run dev`
 
 
 # SolPulseBot

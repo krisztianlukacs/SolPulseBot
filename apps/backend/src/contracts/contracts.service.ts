@@ -52,11 +52,11 @@ export class ContractsService {
         if (!existsSync(filename)) {
             const data = {
                 ...event,
-                time: new Date().getUTCDate()
+                time: new Date().toISOString()
             }
             const contractIdDirectory = resolve(homedir(), 'easystellarlogs', contractId);
             if (!existsSync(contractIdDirectory)) {
-                mkdirSync(contractIdDirectory)
+                mkdirSync(contractIdDirectory, {recursive: true})
             }
             writeFileSync(filename, JSON.stringify(data))
         }

@@ -19,8 +19,8 @@ interface Event {
   from: string
   to: string
   value: string
-  blockNumber: number
-  timestamp: string
+  ledger: number
+  time: string
 }
 
 interface EventCount {
@@ -46,8 +46,8 @@ const generateTestData = (count: number): Event[] => {
     from: `0x${Math.random().toString(16).slice(2, 12)}...${Math.random().toString(16).slice(2, 6)}`,
     to: `0x${Math.random().toString(16).slice(2, 12)}...${Math.random().toString(16).slice(2, 6)}`,
     value: (Math.random() * 10).toFixed(4),
-    blockNumber: 1000000 + i,
-    timestamp: new Date(now - Math.random() * 24 * 60 * 60 * 1000).toLocaleString(),
+    ledger: 1000000 + i,
+    time: new Date(now - Math.random() * 24 * 60 * 60 * 1000).toLocaleString(),
   }))
 }
 
@@ -90,7 +90,7 @@ export default function Dashboard() {
   const pieChartData: ChartData[] = Object.entries(eventCounts).map(([name, value]) => ({ name, value }))
 
   const hourlyEventCounts: EventCount = events.reduce((acc, event) => {
-    const hour = new Date(event.timestamp).getHours()
+    const hour = new Date(event.time).getHours()
     acc[hour] = (acc[hour] || 0) + 1
     return acc
   }, {} as EventCount)
@@ -199,7 +199,7 @@ export default function Dashboard() {
                       className="cursor-pointer hover:bg-muted/50"
                       onClick={() => setSelectedEvent(event)}
                     >
-                      <TableCell>{event.timestamp}</TableCell>
+                      <TableCell>{event.time}</TableCell>
                       <TableCell>
                         <Badge variant={
                           event.type === "Transfer" ? "default" :

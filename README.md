@@ -1,3 +1,6 @@
+`./build_and_deploy.sh && npm run dev`
+
+
 # SolPulseBot
 # Turborepo starter
 

@@ -4,6 +4,8 @@
 
 **Project Title: Real-Time Monitoring Tool for Smart Contracts with Telegram Alerts**
 
+[Project X account](https://x.com/SolPulseBot)
+
 **Project Description:**
 
 This project aims to build a real-time monitoring tool for smart contracts that automatically tracks state changes and sends notifications via Telegram. The goal is to provide a user-friendly, efficient way for developers and stakeholders to stay informed about the dynamic state changes occurring within a smart contract (or program) without the need to manually check the blockchain for updates.
